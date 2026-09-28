@@ -61,6 +61,8 @@ export function Footer() {
             <a href={LINKS.stakewiz} target="_blank" rel="noreferrer">Stakewiz ↗</a>
             <a href={LINKS.validatorsApp} target="_blank" rel="noreferrer">validators.app ↗</a>
             <a href={LINKS.solscanVote} target="_blank" rel="noreferrer">Solscan ↗</a>
+            <a href={LINKS.decentra} target="_blank" rel="noreferrer">Decentra ↗</a>
+            <a href={LINKS.jito} target="_blank" rel="noreferrer">Jito ↗</a>
           </div>
           <div className="stack gap-12">
             <span className="eyebrow">Giving</span>

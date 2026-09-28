@@ -156,7 +156,8 @@ h1, h2, h3, p { margin: 0; }
 .facts dt { margin: 0; }
 .facts dd { margin: 0; font-weight: 700; text-align: right; }
 .node-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 11px; letter-spacing: 0.06em; color: var(--grey); }
-.node-links { display: flex; gap: 18px; font-size: 12px; font-weight: 500; }
+.node-links { display: flex; flex-wrap: wrap; gap: 10px 18px; font-size: 12px; font-weight: 500; }
+.node-links a { white-space: nowrap; }
 
 .keyrow { display: grid; grid-template-columns: 84px minmax(0, 1fr) 44px; gap: 10px; align-items: center; }
 .keyrow-label { font-size: 10px; letter-spacing: 0.1em; color: var(--grey); }

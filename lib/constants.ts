@@ -10,6 +10,8 @@ export const LINKS = {
   stakewiz: `https://stakewiz.com/validator/${VOTE_ACCOUNT}`,
   validatorsApp: `https://www.validators.app/validators/${IDENTITY}?locale=en&network=mainnet`,
   solscanVote: `https://solscan.io/account/${VOTE_ACCOUNT}`,
+  decentra: `https://stats.decentra.cloud/validators/${VOTE_ACCOUNT}`,
+  jito: `https://www.jito.network/validator/${VOTE_ACCOUNT}/`,
   x: 'https://x.com/LuaSol_Labs',
   telegram: 'https://t.me/therealjque',
   bamRepo: 'https://github.com/traderjque/bam-rewards-checker',
