@@ -6,6 +6,7 @@ import StakeWidget from '@/components/StakeWidget';
 import Terminator from '@/components/Terminator';
 import { IDENTITY, LINKS, VOTE_ACCOUNT, short } from '@/lib/constants';
 import { getAll, num } from '@/lib/data';
+import { CHARITIES_FUNDED, DONATED_USD, DONATIONS, DONATION_WALLET } from '@/lib/donations';
 
 export const revalidate = 60;
 
@@ -252,9 +253,10 @@ export default async function Home() {
               </div>
               <p className="lede">
                 Building comes first. But a share of our validator revenue is set aside every epoch for children’s charities,
-                donated on-chain through The Giving Block.
+                donated on-chain through The Giving Block. Every transfer is in the ledger below.
               </p>
             </div>
+            <span className="mono ledger-label">NEXT IN ROTATION</span>
             <div className="charities">
               <a className="charity c1" href={LINKS.first} target="_blank" rel="noreferrer">
                 <span className="mono tag">STEM</span>
@@ -274,6 +276,68 @@ export default async function Home() {
                 <span>Support for seriously ill children and their families.</span>
                 <span className="mono" style={{ marginTop: 'auto' }}>starlight.org ↗</span>
               </a>
+            </div>
+
+            <div className="ledger" id="ledger">
+              <div className="ledger-top">
+                <div className="stack gap-8">
+                  <span className="mono ledger-label">DONATION LEDGER · ON-CHAIN</span>
+                  <div className="ledger-totals">
+                    <div>
+                      <b>${DONATED_USD.toLocaleString('en-US')}</b>
+                      <span className="mono">DONATED</span>
+                    </div>
+                    <div>
+                      <b>{CHARITIES_FUNDED}</b>
+                      <span className="mono">CHARITIES FUNDED</span>
+                    </div>
+                    <div>
+                      <b>{DONATIONS.length}</b>
+                      <span className="mono">TRANSFERS</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="ledger-wallet">
+                  <CopyButton value={DONATION_WALLET} label="WALLET" />
+                  <a className="mono" href={`https://solscan.io/account/${DONATION_WALLET}`} target="_blank" rel="noreferrer">
+                    Full wallet history on Solscan ↗
+                  </a>
+                </div>
+              </div>
+              <div className="ledger-table" role="table" aria-label="Donation ledger">
+                <div className="ledger-row ledger-head mono" role="row">
+                  <span role="columnheader">DATE</span>
+                  <span role="columnheader">CHARITY</span>
+                  <span role="columnheader">AMOUNT</span>
+                  <span role="columnheader">TRANSACTION</span>
+                </div>
+                {DONATIONS.map((d) => (
+                  <div className="ledger-row" role="row" key={d.tx}>
+                    <span className="mono ledger-date" role="cell">
+                      {new Date(`${d.date}T00:00:00Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}
+                    </span>
+                    <span className="ledger-charity" role="cell">
+                      <a href={d.url} target="_blank" rel="noreferrer">
+                        {d.charity} ↗
+                      </a>
+                      <span>{d.cause} · via The Giving Block</span>
+                    </span>
+                    <span className="ledger-amt" role="cell">
+                      {d.amount.toLocaleString('en-US')} <small>{d.asset}</small>
+                    </span>
+                    <span className="mono ledger-tx" role="cell">
+                      <a href={`https://solscan.io/tx/${d.tx}`} target="_blank" rel="noreferrer">
+                        {short(d.tx, 6)} ↗
+                      </a>
+                      {d.post && (
+                        <a href={d.post} target="_blank" rel="noreferrer">
+                          Post ↗
+                        </a>
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>

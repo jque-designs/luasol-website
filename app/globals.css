@@ -219,6 +219,30 @@ h1, h2, h3, p { margin: 0; }
 .charity { border-radius: 26px; padding: 28px; display: flex; flex-direction: column; gap: 12px; min-height: 280px; font-size: 16px; line-height: 1.5; }
 .charity-name { font-size: 32px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; }
 .charity .mono { font-size: 12px; }
+.ledger-label { font-size: 11px; letter-spacing: 0.12em; color: var(--grey); }
+.ledger { background: var(--mist); border: 2px solid var(--night); border-radius: 32px; padding: 32px; display: flex; flex-direction: column; gap: 28px; }
+.ledger-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 32px; align-items: end; }
+.ledger-totals { display: flex; gap: 40px; flex-wrap: wrap; }
+.ledger-totals div { display: flex; flex-direction: column; gap: 4px; }
+.ledger-totals b { font-size: 56px; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; }
+.ledger-totals div:first-child b { color: var(--line); }
+.ledger-totals .mono { font-size: 11px; letter-spacing: 0.1em; color: var(--grey); }
+.ledger-wallet { display: flex; flex-direction: column; gap: 10px; }
+.ledger-wallet > a { font-size: 12px; align-self: flex-end; text-decoration: underline; text-underline-offset: 3px; }
+.ledger-table { background: var(--panel); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; }
+.ledger-row { display: grid; grid-template-columns: 130px minmax(0, 1fr) 150px 200px; gap: 20px; align-items: center; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-head { font-size: 11px; letter-spacing: 0.1em; color: var(--grey); border-bottom: 2px solid var(--night); padding-top: 14px; padding-bottom: 14px; }
+.ledger-date { font-size: 13px; }
+.ledger-charity { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ledger-charity a { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.ledger-charity a:hover { color: var(--line); }
+.ledger-charity span { font-size: 13px; color: var(--ink-2); }
+.ledger-amt { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+.ledger-amt small { font-size: 12px; font-weight: 600; letter-spacing: 0; }
+.ledger-tx { display: flex; gap: 14px; font-size: 12px; white-space: nowrap; }
+.ledger-tx a { text-decoration: underline; text-underline-offset: 3px; }
+.ledger-tx a:hover { color: var(--line); }
 .c1 { background: var(--lua); color: var(--mist); }
 .c2 { background: var(--line); color: var(--mist); }
 .c3 { background: var(--sol); color: var(--night); }
@@ -327,6 +351,8 @@ h1, h2, h3, p { margin: 0; }
   .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tools-grid { grid-template-columns: 1fr; }
   .charities, .tool-index { grid-template-columns: 1fr; }
+  .ledger-top { grid-template-columns: 1fr; }
+  .ledger-wallet > a { align-self: flex-start; }
   .charity, .tool-card { min-height: 0; }
   .bam-sum { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -384,6 +410,16 @@ h1, h2, h3, p { margin: 0; }
   .tools-hero h1 { left: 12px; top: 96px; bottom: auto; font-size: min(36vw, 200px); }
   .tools-hero-copy { left: 16px; right: 16px; bottom: 32px; width: auto; font-size: 24px; }
   .bam-app { padding: 20px; border-radius: 24px; }
+  .ledger { padding: 20px; border-radius: 24px; gap: 22px; }
+  .ledger-totals { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 12px; }
+  .ledger-totals b { font-size: 34px; }
+  .ledger-totals .mono { font-size: 9px; }
+  .ledger-head { display: none; }
+  .ledger-row { grid-template-columns: 1fr auto; grid-template-areas: 'date amt' 'who who' 'tx tx'; gap: 8px 12px; padding: 16px; }
+  .ledger-date { grid-area: date; }
+  .ledger-amt { grid-area: amt; font-size: 20px; }
+  .ledger-charity { grid-area: who; }
+  .ledger-tx { grid-area: tx; }
   .bam-form { flex-direction: column; }
   .vp-meta span { display: none; }
   .vp-list { max-height: 300px; }
