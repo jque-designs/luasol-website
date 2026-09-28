@@ -266,8 +266,35 @@ h1, h2, h3, p { margin: 0; }
 .bam-form input { flex: 1; min-width: 0; height: 56px; border: 2px solid var(--night); border-radius: 14px; padding: 0 16px; font-family: var(--mono); font-size: 14px; color: var(--night); background: var(--panel); }
 .bam-form button { height: 56px; border: 0; border-radius: 14px; background: var(--night); color: var(--mist); padding: 0 28px; font-size: 17px; font-weight: 700; }
 .bam-form button:disabled { opacity: 0.6; }
-.presets { display: flex; gap: 8px; flex-wrap: wrap; }
-.preset { height: 34px; padding: 0 14px; border: 1.5px solid var(--night); border-radius: 999px; background: transparent; font-family: var(--mono); font-size: 11px; }
+.vp { position: relative; flex: 1; min-width: 0; }
+.vp input { width: 100%; padding-right: 48px; }
+.bam-form .vp-toggle { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; padding: 0; border-radius: 10px; background: transparent; color: var(--night); display: grid; place-items: center; }
+.bam-form .vp-toggle:hover { background: var(--haze-2); }
+.vp-toggle svg { transition: transform 0.15s ease; }
+.vp-pop { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; right: 0; background: var(--panel); border: 2px solid var(--night); border-radius: 18px; box-shadow: 0 18px 40px -18px rgba(34, 26, 82, 0.45); overflow: hidden; }
+.vp-head { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; font-size: 10px; letter-spacing: 0.1em; color: var(--grey); border-bottom: 1.5px solid var(--border); }
+.vp-list { list-style: none; margin: 0; padding: 6px; max-height: 340px; overflow-y: auto; overscroll-behavior: contain; }
+.vp-list li { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 12px; cursor: pointer; }
+.vp-list li.on { background: var(--haze-2); }
+.vp-av { flex: none; width: 30px; height: 30px; border-radius: 50%; object-fit: cover; background: var(--haze); }
+.vp-mono { display: grid; place-items: center; font-size: 13px; font-weight: 800; color: var(--night); }
+.vp-name { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.vp-name b { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vp-name .mono { font-size: 11px; color: var(--grey); }
+.vp-meta { flex: none; display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ink-2); }
+.vp-bam { font-style: normal; background: var(--sol); color: var(--night); border-radius: 999px; padding: 2px 7px; font-size: 9px; letter-spacing: 0.08em; }
+.presets { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.presets-label { font-size: 10px; letter-spacing: 0.12em; color: var(--grey); margin-right: 4px; }
+.preset { display: inline-flex; align-items: center; height: 34px; border: 1.5px solid var(--night); border-radius: 999px; font-family: var(--mono); font-size: 11px; overflow: hidden; }
+.preset button { height: 100%; border: 0; background: transparent; color: inherit; font: inherit; padding: 0 6px 0 14px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preset .preset-x { padding: 0 11px 0 5px; font-size: 14px; color: var(--grey); }
+.preset .preset-x:hover { color: var(--night); }
+.preset.on { background: var(--night); color: var(--mist); }
+.preset.on .preset-x { color: var(--haze); }
+.bam-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.bam-who .mono { font-size: 11px; letter-spacing: 0.1em; color: var(--grey); }
+.bam-who b { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.bam-who-note { flex-basis: 100%; font-size: 13px; color: var(--ink-2); }
 .bam-sum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .bam-tile { border: 1.5px solid var(--border); background: var(--panel); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 6px; }
 .bam-tile .mono { font-size: 10px; letter-spacing: 0.1em; color: var(--grey); }
@@ -357,6 +384,8 @@ h1, h2, h3, p { margin: 0; }
   .tools-hero-copy { left: 16px; right: 16px; bottom: 32px; width: auto; font-size: 24px; }
   .bam-app { padding: 20px; border-radius: 24px; }
   .bam-form { flex-direction: column; }
+  .vp-meta span { display: none; }
+  .vp-list { max-height: 300px; }
   .bam-table th, .bam-table td { padding: 10px 12px; }
 }
 

@@ -73,12 +73,12 @@ export default function Tools() {
                 BAM Subsidy Checker
               </h2>
               <p className="lede">
-                Jito’s BAM programme (JIP-31) allocates JitoSOL subsidies to eligible validators each epoch. Paste a validator
-                identity to see every allocation, what’s been claimed and what’s still waiting.
+                Jito’s BAM programme (JIP-31) allocates JitoSOL subsidies to eligible validators each epoch. Search for a
+                validator (or paste its identity) to see every allocation, what’s been claimed and what’s still waiting.
               </p>
               <div className="steps">
                 <div>
-                  <span className="mono">01</span>Paste a validator identity
+                  <span className="mono">01</span>Pick a validator or paste its identity
                 </div>
                 <div>
                   <span className="mono">02</span>We read allocations and claims on-chain
