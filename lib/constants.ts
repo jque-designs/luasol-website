@@ -25,4 +25,7 @@ export const LINKS = {
   backpack: 'https://backpack.app/download',
 };
 
+/** MEV commission, set by Lua Sol Labs. Shown as-is on the site rather than read from Stakewiz/Jito. */
+export const MEV_COMMISSION_PCT = 10;
+
 export const short = (s: string, n = 4) => `${s.slice(0, n)}…${s.slice(-n)}`;

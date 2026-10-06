@@ -1,5 +1,5 @@
 import 'server-only';
-import { VOTE_ACCOUNT } from './constants';
+import { MEV_COMMISSION_PCT, VOTE_ACCOUNT } from './constants';
 
 const RPC_URL = process.env.RPC_URL || 'https://api.mainnet-beta.solana.com';
 
@@ -52,33 +52,11 @@ async function getActivating(): Promise<number | null> {
   }
 }
 
-/**
- * MEV commission from Jito's own per-epoch record (latest completed epoch).
- * Stakewiz and Jito's live list read the current epoch's tip account, which reports 0
- * until it's initialised a few slots in, so they briefly show 0% at every epoch boundary.
- */
-async function getMevCommission(): Promise<number | null> {
-  try {
-    const res = await fetch(`https://kobe.mainnet.jito.network/api/v1/validators/${VOTE_ACCOUNT}`, {
-      next: { revalidate: 900 },
-    });
-    if (!res.ok) return null;
-    const rows = (await res.json()) as { epoch: number; mev_commission_bps: number | null }[];
-    const latest = rows
-      .filter((r) => r && r.mev_commission_bps != null)
-      .sort((a, b) => b.epoch - a.epoch)[0];
-    return latest ? Number(latest.mev_commission_bps) / 100 : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function getValidator(): Promise<Validator | null> {
   try {
-    const [res, activatingStake, jitoMev] = await Promise.all([
+    const [res, activatingStake] = await Promise.all([
       fetch(`https://api.stakewiz.com/validator/${VOTE_ACCOUNT}`, { next: { revalidate: 300 } }),
       getActivating(),
-      getMevCommission(),
     ]);
     if (!res.ok) return null;
     const v = await res.json();
@@ -88,7 +66,7 @@ export async function getValidator(): Promise<Validator | null> {
       activeStake: Number(v.activated_stake),
       activatingStake,
       commissionPct: c > 100 ? c / 100 : c,
-      mevCommissionPct: jitoMev ?? (v.jito_commission_bps == null ? null : Number(v.jito_commission_bps) / 100),
+      mevCommissionPct: MEV_COMMISSION_PCT,
       skipRate: Number(v.skip_rate ?? v.wiz_skip_rate ?? 0),
       voteSuccess: Number(v.vote_success),
       uptime: Number(v.uptime),
