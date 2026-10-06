@@ -53,9 +53,8 @@ async function getActivating(): Promise<number | null> {
 }
 
 /**
- * MEV commission from Jito's own per-epoch record (latest completed epoch).
- * Stakewiz and Jito's live list read the current epoch's tip account, which reports 0
- * until it's initialised a few slots in, so they briefly show 0% at every epoch boundary.
+ * MEV commission from Jito's own per-epoch record (latest completed epoch), i.e. what the
+ * validator actually charged on-chain. Falls back to Stakewiz if Jito is unreachable.
  */
 async function getMevCommission(): Promise<number | null> {
   try {
