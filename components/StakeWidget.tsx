@@ -168,7 +168,7 @@ export default function StakeWidget({ apy, nextEpoch }: { apy: number | null; ne
           <h3>You’re staking with Lua Sol Labs.</h3>
           <p>
             It activates at the next epoch boundary{nextEpoch ? ` (${nextEpoch})` : ''} and earns from then on. A share of
-            what it earns goes to kids.
+            what it earns goes to charities funding kids’ causes.
           </p>
           <div className="row gap-8 flexwrap">
             <a className="btn btn-sun" href={`https://solscan.io/tx/${phase.sig}`} target="_blank" rel="noreferrer">
