@@ -2,13 +2,33 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { IDENTITY, LINKS, short } from '@/lib/constants';
+import BamClaim from './BamClaim';
 
-type BamEpoch = { epoch: number; amount: number; claimed: boolean; claimedAmount: number; claimPda: string };
+type BamEpoch = {
+  epoch: number;
+  amount: number;
+  claimed: boolean;
+  claimedAmount: number;
+  claimPda: string;
+  status: 'claimed' | 'claimable' | 'expired';
+  claimBy: number | null;
+};
 type BamResult = {
   validator: string;
   scanned: [number, number];
+  current: number;
   epochs: BamEpoch[];
-  summary: { allocated: number; claimed: number; unclaimed: number; eligible: number; epochsClaimed: number; epochsUnclaimed: number };
+  summary: {
+    allocated: number;
+    claimed: number;
+    unclaimed: number;
+    expired: number;
+    eligible: number;
+    epochsClaimed: number;
+    epochsUnclaimed: number;
+    epochsExpired: number;
+    nextDeadline: number | null;
+  };
 };
 
 type Dir = { n: string; i: string; v: string; img: string | null; s: number; b: boolean };
@@ -68,6 +88,40 @@ function Cmd({ epoch }: { epoch: number }) {
         {done ? 'copied' : 'copy'}
       </button>
     </div>
+  );
+}
+
+function CopyCmd({ text, children }: { text: string; children: React.ReactNode }) {
+  const [done, setDone] = useState(false);
+  return (
+    <div className="cmd">
+      {children}
+      <button
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+            setDone(true);
+            setTimeout(() => setDone(false), 1400);
+          } catch {
+            /* clipboard unavailable */
+          }
+        }}
+      >
+        {done ? 'copied' : 'copy'}
+      </button>
+    </div>
+  );
+}
+
+/** One shell line that claims every open epoch with the CLI. */
+function ClaimAllCmd({ epochs }: { epochs: number[] }) {
+  const list = epochs.join(' ');
+  const text = `for e in ${list}; do cargo r -p jito-bam-boost-cli -- bam-boost merkle-distributor claim --network mainnet --epoch $e --rpc-url <RPC_URL> --signer <IDENTITY_KEYPAIR>; done`;
+  return (
+    <CopyCmd text={text}>
+      for e in {list}; do cargo r -p jito-bam-boost-cli -- bam-boost merkle-distributor claim --network mainnet --epoch $e --rpc-url{' '}
+      <b>&lt;RPC_URL&gt;</b> --signer <b>&lt;IDENTITY_KEYPAIR&gt;</b>; done
+    </CopyCmd>
   );
 }
 
@@ -153,10 +207,10 @@ export default function BamChecker() {
     });
   };
 
-  const run = async (addr: string) => {
+  const run = async (addr: string, quiet = false) => {
     let v = addr.trim();
     if (!v) return;
-    setNote('');
+    if (!quiet) setNote('');
     const asVote = byVote.get(v);
     if (asVote && asVote.i !== v) {
       v = asVote.i;
@@ -165,10 +219,10 @@ export default function BamChecker() {
     setInput(v);
     setTyped(false);
     setOpen(false);
-    setState('loading');
+    if (!quiet) setState('loading');
     setErr('');
     try {
-      const res = await fetch(`/api/bam?validator=${encodeURIComponent(v)}`);
+      const res = await fetch(`/api/bam?validator=${encodeURIComponent(v)}${quiet ? `&t=${Date.now()}` : ''}`, quiet ? { cache: 'no-store' } : undefined);
       const j = await res.json();
       if (!res.ok) throw new Error(j.error || 'Check failed');
       setData(j);
@@ -206,7 +260,7 @@ export default function BamChecker() {
   };
 
   const s = data?.summary;
-  const unclaimed = data?.epochs.filter((e) => !e.claimed) ?? [];
+  const unclaimed = data?.epochs.filter((e) => e.status === 'claimable') ?? [];
   const shown = data ? byId.get(data.validator) : undefined;
   const listOpen = open && (results.length > 0 || !dir);
 
@@ -359,12 +413,23 @@ export default function BamChecker() {
               </b>
             </div>
             <div className="bam-tile hot">
-              <span className="mono">UNCLAIMED</span>
+              <span className="mono">CLAIMABLE NOW</span>
               <b>
                 {f4(s.unclaimed)} <small>JitoSOL</small>
               </b>
+              {s.nextDeadline !== null && (
+                <span className="bam-tile-sub">
+                  Claim by epoch {s.nextDeadline} · {Math.max(0, s.nextDeadline - data.current)} left
+                </span>
+              )}
             </div>
           </div>
+          {s.epochsExpired > 0 && (
+            <span className="bam-note">
+              {f4(s.expired)} JitoSOL across {s.epochsExpired} epoch{s.epochsExpired > 1 ? 's' : ''} expired unclaimed. Jito
+              claws back allocations once an epoch’s claim window closes.
+            </span>
+          )}
 
           {data.epochs.length === 0 ? (
             <div className="bam-empty">
@@ -387,7 +452,17 @@ export default function BamChecker() {
                       <tr key={e.epoch}>
                         <td>{e.epoch}</td>
                         <td>{f4(e.amount)} JitoSOL</td>
-                        <td>{e.claimed ? <span className="pill-ok">CLAIMED</span> : <span className="pill-un">UNCLAIMED</span>}</td>
+                        <td>
+                          {e.status === 'claimed' ? (
+                            <span className="pill-ok">CLAIMED</span>
+                          ) : e.status === 'claimable' ? (
+                            <span className="pill-un" title={e.claimBy !== null ? `Claim by epoch ${e.claimBy}` : undefined}>
+                              CLAIMABLE{e.claimBy !== null ? ` · ${Math.max(0, e.claimBy - data.current)} LEFT` : ''}
+                            </span>
+                          ) : (
+                            <span className="pill-gone">EXPIRED</span>
+                          )}
+                        </td>
                         <td style={{ textAlign: 'right' }}>{e.claimed ? f4(e.claimedAmount) : '—'}</td>
                       </tr>
                     ))}
@@ -398,17 +473,28 @@ export default function BamChecker() {
           )}
 
           {unclaimed.length > 0 && (
+            <BamClaim
+              key={data.validator}
+              validator={data.validator}
+              total={s.unclaimed}
+              count={unclaimed.length}
+              onClaimed={() => setTimeout(() => run(data.validator, true), 2500)}
+            />
+          )}
+
+          {unclaimed.length > 0 && (
             <div className="stack gap-12">
               <span className="mono" style={{ fontSize: 11, letterSpacing: '.12em', color: 'var(--grey)' }}>
-                HOW TO CLAIM · {unclaimed.length} EPOCH{unclaimed.length > 1 ? 'S' : ''}
+                OR CLAIM WITH THE CLI · {unclaimed.length} EPOCH{unclaimed.length > 1 ? 'S' : ''}
               </span>
               <p style={{ fontSize: 15, color: 'var(--ink-2)' }}>
                 Build the{' '}
                 <a href={LINKS.bamCli} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>
                   jito-bam-boost-cli
-                </a>
-                , then run one command per epoch, signing with your validator identity keypair.
+                </a>{' '}
+                on the machine that holds your identity keypair, then run this one line to claim every open epoch.
               </p>
+              {unclaimed.length > 1 && <ClaimAllCmd epochs={unclaimed.map((e) => e.epoch)} />}
               <div className="stack gap-8 bam-scroll" style={{ maxHeight: 260 }}>
                 {unclaimed.map((e) => (
                   <Cmd key={e.epoch} epoch={e.epoch} />

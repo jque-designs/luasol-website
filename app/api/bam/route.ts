@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   try {
     const result = await checkBam(validator);
     return NextResponse.json(result, {
-      headers: { 'cache-control': 'public, s-maxage=120, stale-while-revalidate=600' },
+      headers: { 'cache-control': 'public, s-maxage=20, stale-while-revalidate=60' },
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
