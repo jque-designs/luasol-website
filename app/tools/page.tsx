@@ -84,11 +84,11 @@ export default function Tools() {
                   <span className="mono">02</span>We read allocations and claims on-chain
                 </div>
                 <div>
-                  <span className="mono">03</span>Copy the claim command for anything left
+                  <span className="mono">03</span>Claim everything in one click, or copy the CLI line
                 </div>
               </div>
               <p className="bam-note">
-                Read-only. No wallet connection needed.
+                Checking is read-only. Claiming needs the validator identity to sign.
                 <br />
                 Open source:{' '}
                 <a href={LINKS.bamRepo} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>

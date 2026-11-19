@@ -338,6 +338,17 @@ h1, h2, h3, p { margin: 0; }
 .cmd { position: relative; background: var(--deep); color: var(--mist); border-radius: 14px; padding: 14px 64px 14px 16px; font-family: var(--mono); font-size: 12px; line-height: 1.6; word-break: break-all; }
 .cmd b { color: var(--amber); font-weight: 400; }
 .cmd button { position: absolute; top: 10px; right: 10px; height: 30px; padding: 0 10px; border: 1px solid var(--violet-2); border-radius: 8px; background: transparent; color: var(--mist); font-family: var(--mono); font-size: 11px; }
+.pill-gone { color: var(--grey); border: 1.5px dashed var(--border); padding: 3px 10px; border-radius: 999px; font-size: 11px; white-space: nowrap; }
+.bam-tile-sub { font-family: var(--mono); font-size: 11px; color: var(--mist); opacity: 0.8; }
+.claim-box { background: var(--panel); border: 2px solid var(--night); border-radius: 20px; padding: 20px; }
+.claim-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.claim-btn { height: 56px; border: 0; border-radius: 14px; background: var(--sol); color: var(--night); padding: 0 24px; font-size: 17px; font-weight: 800; }
+.claim-btn:disabled { opacity: 0.6; }
+.claim-who { font-size: 11px; color: var(--grey); }
+.claim-ok { background: var(--mist); border: 1.5px solid var(--night); border-radius: 14px; padding: 14px 16px; }
+.claim-ok a { text-decoration: underline; }
+.claim-box .picker-backdrop { position: fixed; z-index: 50; align-items: center; }
+.claim-box .picker { max-width: 420px; }
 .bam-note { font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--grey); }
 .bam-err { background: rgba(242, 131, 90, 0.16); border: 1.5px solid var(--sol); border-radius: 14px; padding: 14px 16px; }
 .bam-empty { border: 2px dashed var(--border); border-radius: 20px; padding: 40px 24px; text-align: center; color: var(--grey); font-family: var(--mono); font-size: 12px; }
