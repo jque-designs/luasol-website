@@ -24,7 +24,7 @@ Builds `createAccount` + `delegate` to vote account `Lua298Wo…f6tJ` in the bro
 
 ## BAM Subsidy Checker
 
-`/api/bam?validator=<identity>` — ported from `traderjque/bam-rewards-checker`. Reads Jito's per-epoch merkle trees (cached 24 h) and batch-reads `claim_status` and `merkle_distributor` PDAs with `getMultipleAccounts`. Each epoch is **claimed**, **claimable** (distributor open, current epoch ≤ its `end_epoch`, about 19 epochs after the allocation) or **expired** (clawed back). Responses are edge-cached 20 s so a fresh claim shows up quickly.
+`/api/bam?validator=<identity>` — ported from `traderjque/bam-rewards-checker`. Reads Jito's per-epoch merkle trees (cached 24 h) and batch-reads `claim_status` and `merkle_distributor` PDAs with `getMultipleAccounts`. Each epoch is **claimed**, **claimable** (distributor open, current epoch ≤ its `end_epoch`, about 19 epochs after the allocation) or **expired** (clawed back). Responses are edge-cached 120 s; after a one-click claim the page re-fetches with a cache-buster so the new status shows right away.
 
 **One-click claim.** `/api/bam/claim?validator=<identity>` rebuilds each claimable epoch's merkle proof from Jito's published tree (`lib/bamMerkle.ts`, same hashing as `jito-bam-boost-cli`) and checks it against the root stored on-chain. `components/BamClaim.tsx` packs the claims into as few transactions as fit, and the connected wallet signs them all at once. Only the validator identity can claim, so this works when the identity key is in a browser or hardware wallet; the CLI one-liner is shown for everyone else.
 
